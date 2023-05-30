@@ -3,6 +3,7 @@ package com.dal.view;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Scanner;
+import java.util.function.BiPredicate;
 
 import com.dal.Exception.*;
 import com.dal.controll.MyControll;
@@ -26,9 +27,9 @@ public class Myclass {
 		String User = br.readLine();
 		System.out.println("Enter a Passwod");
 		String Pass = br.readLine();
-		
+		BiPredicate<String, String> res = (un, pw) -> User.equals("Ravee") && Pass.equals("teja");
 		try {
-			if(User.equals("Ravee") && Pass.equals("teja")) {
+			if(res.test(Pass, User)) {
 				do {				
 					try {
 						System.out.println("Loading...");
