@@ -30,7 +30,9 @@ public class MyControll {
 	public void viewEmployeelist() {
 //			System.out.println("You enter Emp number is "+emp.getEmpno());
 //			System.out.println("You Enter Emp number is "+ emp.getEmpname());
-		System.out.println(l);
+		l.forEach(emp-> System.out.println(emp));
+		//System.out.println(l);
+		
 	}
 
 	public void SerialEgMehode() throws IOException {
