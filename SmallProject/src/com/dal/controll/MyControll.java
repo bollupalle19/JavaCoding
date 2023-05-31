@@ -1,74 +1,72 @@
-package com.dal.controll;
+package com.dal.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import com.dal.model.Employee;
+import com.dal.util.MyDbConnection;
 
-import java.io.*;
+public class Employeedao {
 
-public class MyControll {
-	Scanner sc = new Scanner(System.in);
-	Employee emp;
-	List l = new ArrayList<>();
-
-	public void AddEmpDetails() {
-		emp = new Employee();
-//			emp.setEmpname("Ravikumar.bollupalle");
-//			emp.setEmpno(19000955);
-		System.out.println("Enter Emp number");
-		int No = sc.nextInt();
-		emp.setEmpno(No);
-		System.out.println("Enter Employee Name Is");
-		String name = sc.next();
-		emp.setEmpname(name);
-		l.add(emp);
-
-	}
-
-	public void viewEmployeelist() {
-//			System.out.println("You enter Emp number is "+emp.getEmpno());
-//			System.out.println("You Enter Emp number is "+ emp.getEmpname());
-		l.forEach(emp-> System.out.println(emp));
-		//System.out.println(l);
+		Connection con;
+		Statement st;
+		PreparedStatement ps;
+		ResultSet rs;
 		
-	}
-
-	public void SerialEgMehode() throws IOException {
-		try {
-			FileOutputStream fos = new FileOutputStream("dedalus.txt");
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-
-			oos.writeObject(l);
-			System.out.println("Serilized to file dedalus.txt");
-			oos.close();
-			fos.close();
-		} catch (FileNotFoundException fnf) {
-			System.out.println("No file");
+		public void InsertRecord(Employee emp) {
+			con = MyDbConnection.GetmydbConnctions();
+			try {
+				ps = con.prepareStatement("insert into EMP values(?,?)");
+				ps.setInt(1, emp.getEmpno());
+				ps.setString(2, emp.getEmpname());
+				int count = ps.executeUpdate();
+				System.out.println(count  + " got inset into DB sucess");
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+			}
+			
 		}
+		
+		public void SelectedRecord() {
+			con = MyDbConnection.GetmydbConnctions();
+			try {
+				st = con.createStatement();
+				rs = st.executeQuery("Select * from EMP");
+				while(rs.next()) {
+					System.out.println(rs.getInt(1) + " -- " + rs.getString(2));
+				}
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+			}
 	}
-
-	public void DeSerialEgMehode() throws IOException {
-		try {
-
-			FileInputStream fis = new FileInputStream("dedalus.txt");
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			ArrayList<Employee> emp = (ArrayList<Employee>) ois.readObject();
-			System.out.println("DeSerilized from file dedalus.txt");
-			System.out.println(emp);
-			//System.out.println(emp.getEmpname());
-			ois.close();
-			fis.close();
-		} catch (FileNotFoundException fnf) {
-			System.out.println("No file");
-		} catch (ClassNotFoundException cnf) {
-			System.out.println("No Emp class");
+		
+		public void DeleteRecord(int id) {
+			con = MyDbConnection.GetmydbConnctions();
+			try {
+				ps = con.prepareStatement("Delete from EMP where EmpNUmber = ?");
+				ps.setInt(1, id);
+				int i = ps.executeUpdate();
+				System.out.println(i  + " got Deleted");
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
-		catch(ClassCastException cce) {
-			System.out.println("No Cast class");
+		public void UpdateRecord(int id, String Name) {
+			con = MyDbConnection.GetmydbConnctions();
+			try {
+				ps = con.prepareStatement("update EMP set ename = ? where empnumber=?");
+				ps.setString(1, Name);
+				ps.setInt(1,id);
+				int i = ps.executeUpdate();
+				System.out.println(i  + " got Updated");
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
-
-	}
-	
 }
